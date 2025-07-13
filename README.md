@@ -35,3 +35,19 @@
 - [Expo](https://expo.dev/)에 가입
 - VS Code 터미널에서 expo login을 통해 로그인
 - 모바일 Expo 앱 로그인
+
+## 커밋 메시지 컨벤션
+### 1. 타입
+- feat: 새로운 기능 추가 (Feature)
+- fix: 버그 수정
+- refactor: 기능 변화 없이 코드 구조 개선
+- style: 코드 스타일 변경 (세미콜론, 들여쓰기 등)
+- chore: 빌드 설정, 패키지 관리 등 개발 환경 관련 변경
+- docs: 문서, 주석, README 등 관련 변경
+### 2. 예시
+- feat: 미션 화면 하단 탭 연동 완료
+- fix: Android에서 앱 크래시 나는 현상 해결
+- refactor: Navigation 구조 분리
+- style: 코드 자동 정렬 적용
+- chore: .env 경로 gitignore에 추가
+- docs: 프로젝트 시작 방법 문서화

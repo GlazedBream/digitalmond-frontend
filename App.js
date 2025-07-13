@@ -1,14 +1,8 @@
 import { StyleSheet, Text, View, Dimensions } from "react-native";
+import RootNavigator from "./src/navigation/RootNavigator";
+export default RootNavigator;
 
 const { width: WINDOW_WIDTH } = Dimensions.get("window");
-
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.hello}>Hello, World!</Text>
-    </View>
-  );
-}
 
 const colors = {
   background: "#EED9C4",
@@ -17,12 +11,15 @@ const colors = {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.background },
-  hello: {
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  text: {
     color: colors.primary,
     fontSize: 100,
-    fontWeight: 800,
-    textAlign: "center",
-    marginTop: WINDOW_WIDTH * 0.4,
+    fontWeight: 500,
   },
 });
