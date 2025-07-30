@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
 
-const TopBar = ({ onBackPress, title }) => {
+const TopBar = ({ onBackPress, title, rightComponent }) => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
@@ -11,7 +11,9 @@ const TopBar = ({ onBackPress, title }) => {
         <View style={styles.titleContainer}>
           <Text style={styles.titleText}>{title}</Text>
         </View>
-        <View style={styles.rightActionPlaceholder} />
+        <View style={styles.rightComponentContainer}>
+          {rightComponent}
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -45,8 +47,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#000000',
   },
-  rightActionPlaceholder: {
-    width: 40, // to balance the back button
+  rightComponentContainer: {
+    // Adjust as needed for proper positioning
   },
 });
 

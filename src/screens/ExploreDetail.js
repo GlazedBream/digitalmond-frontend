@@ -37,18 +37,23 @@ const ExploreDetail = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
-      <TopBar onBackPress={() => navigation.goBack()} title={`City${cardId}`} />
-      <TouchableOpacity
-        style={[
-          styles.communityButton,
-          isJoined ? styles.communityButtonJoined : null,
-        ]}
-        onPress={handleJoinToggle}
-      >
-        <Text style={styles.communityButtonText}>
-          {isJoined ? "지역 커뮤니티에 참가함" : "지역 커뮤니티 참가"}
-        </Text>
-      </TouchableOpacity>
+      <TopBar
+        onBackPress={() => navigation.goBack()}
+        title={`City${cardId}`}
+        rightComponent={
+          <TouchableOpacity
+            style={[
+              styles.communityButton,
+              isJoined ? styles.communityButtonJoined : null,
+            ]}
+            onPress={handleJoinToggle}
+          >
+            <Text style={styles.communityButtonText}>
+              {isJoined ? "참가함" : "참가"}
+            </Text>
+          </TouchableOpacity>
+        }
+      />
       <TabView
         navigationState={{ index, routes }}
         renderScene={renderScene}
@@ -74,42 +79,35 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "white",
   },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    textAlign: "center",
-    marginVertical: 20,
-  },
   communityButton: {
     backgroundColor: "#5A4632",
-    padding: 15,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
     borderRadius: 10,
-    marginHorizontal: 20,
-    marginBottom: 20,
-    alignItems: "center",
+    marginRight: 5, // Adjust margin to fit within TopBar
   },
   communityButtonJoined: {
     backgroundColor: "#A0A0A0", // Lighter color when joined
   },
   communityButtonText: {
     color: "white",
-    fontSize: 16,
+    fontSize: 12,
     fontWeight: "bold",
   },
   tabBar: {
-    backgroundColor: "lightgray", // Changed to lightgray for visibility check
-    height: 50, // Explicitly set height for visibility
+    backgroundColor: "lightgray",
+    height: 50,
   },
   indicator: {
     backgroundColor: "#5A4632",
   },
   label: {
-    color: "black", // Changed to black for better visibility
+    color: "black",
     fontWeight: "bold",
-    fontSize: 16, // Set a reasonable font size
+    fontSize: 16,
   },
   tab: {
-    width: 120, // Set a fixed width for each tab to enable scrolling
+    width: 120,
   },
 });
 
