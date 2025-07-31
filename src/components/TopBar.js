@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
+import colors from '../styles/colors';
 
 const TopBar = ({ onBackPress, title, rightComponent }) => {
   return (
@@ -21,7 +22,7 @@ const TopBar = ({ onBackPress, title, rightComponent }) => {
 
 const styles = StyleSheet.create({
   safeArea: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.surface,
   },
   container: {
     flexDirection: 'row',
@@ -29,14 +30,17 @@ const styles = StyleSheet.create({
     height: 50,
     paddingHorizontal: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#E0E0E0',
+    borderBottomColor: colors.border,
   },
   backButton: {
+    width: 60, // 고정 너비
+    justifyContent: 'center',
+    alignItems: 'flex-start', // 왼쪽 정렬
     padding: 5,
   },
   backButtonText: {
     fontSize: 24,
-    color: '#000000',
+    color: colors.textPrimary,
   },
   titleContainer: {
     flex: 1,
@@ -45,10 +49,12 @@ const styles = StyleSheet.create({
   titleText: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#000000',
+    color: colors.textPrimary,
   },
   rightComponentContainer: {
-    // Adjust as needed for proper positioning
+    width: 60, // 고정 너비
+    justifyContent: 'center',
+    alignItems: 'flex-end', // 오른쪽 정렬
   },
 });
 

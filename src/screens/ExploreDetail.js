@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, useWindowDimensions } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  useWindowDimensions,
+} from "react-native";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import TopBar from "../components/TopBar"; // TopBar import
 import Tab1 from "./ExploreDetailTabs/Tab1";
@@ -7,6 +13,7 @@ import Tab2 from "./ExploreDetailTabs/Tab2";
 import Tab3 from "./ExploreDetailTabs/Tab3";
 import Tab4 from "./ExploreDetailTabs/Tab4";
 import Tab5 from "./ExploreDetailTabs/Tab5";
+import colors from "../styles/colors";
 
 const renderScene = SceneMap({
   tab1: Tab1,
@@ -77,32 +84,34 @@ const ExploreDetail = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: colors.surface,
   },
   communityButton: {
-    backgroundColor: "#5A4632",
+    backgroundColor: colors.primary,
     paddingVertical: 5,
     paddingHorizontal: 10,
     borderRadius: 10,
     marginRight: 5, // Adjust margin to fit within TopBar
+    width: 70, // 고정 너비 추가
+    alignItems: "center", // 텍스트 중앙 정렬을 위해 추가
   },
   communityButtonJoined: {
-    backgroundColor: "#A0A0A0", // Lighter color when joined
+    backgroundColor: colors.secondary, // Lighter color when joined
   },
   communityButtonText: {
-    color: "white",
-    fontSize: 12,
+    color: colors.textOnPrimary,
+    fontSize: 16,
     fontWeight: "bold",
   },
   tabBar: {
-    backgroundColor: "lightgray",
+    backgroundColor: colors.tabBarBackground,
     height: 50,
   },
   indicator: {
-    backgroundColor: "#5A4632",
+    backgroundColor: colors.primary,
   },
   label: {
-    color: "black",
+    color: colors.textPrimary,
     fontWeight: "bold",
     fontSize: 16,
   },

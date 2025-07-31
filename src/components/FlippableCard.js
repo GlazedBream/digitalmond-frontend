@@ -3,12 +3,29 @@ import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { Fontisto } from "@expo/vector-icons";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import colors from "../styles/colors";
+
+const weatherIcons = {
+  Clouds: "cloudy",
+  Clear: "day-sunny",
+  Atmosphere: "cloudy-gusts",
+  Snow: "snow",
+  Rain: "rains",
+  Drizzle: "rain",
+  Thunderstorm: "lightning",
+};
 
 const FlippableCard = ({ navigation, cardId }) => {
   const [isFlipped, setIsFlipped] = useState(false);
+  const [isLiked, setIsLiked] = useState(false);
 
   const handleFlip = () => {
     setIsFlipped(!isFlipped);
+  };
+
+  const handleLike = (e) => {
+    e.stopPropagation(); // 이벤트 버블링 방지
+    setIsLiked(!isLiked);
   };
 
   const handleDetailPress = () => {
@@ -20,9 +37,19 @@ const FlippableCard = ({ navigation, cardId }) => {
       { name: "test1", value: 0.7 },
       { name: "test2", value: 0.5 },
       { name: "test3", value: 0.9 },
-      { name: "test4", value: 0.4 },
+      { name: "test4", value: 0.3 },
       { name: "test5", value: 0.6 },
     ];
+
+    const getGaugeColor = (value) => {
+      if (value >= 0.7) {
+        return colors.success;
+      }
+      if (value >= 0.4) {
+        return colors.warning;
+      }
+      return colors.error;
+    };
 
     return (
       <View style={styles.indicatorsContainer}>
@@ -33,7 +60,10 @@ const FlippableCard = ({ navigation, cardId }) => {
               <View
                 style={[
                   styles.gaugeFill,
-                  { width: `${indicator.value * 100}%` },
+                  {
+                    width: `${indicator.value * 100}%`,
+                    backgroundColor: getGaugeColor(indicator.value),
+                  },
                 ]}
               />
             </View>
@@ -47,12 +77,21 @@ const FlippableCard = ({ navigation, cardId }) => {
     <TouchableOpacity
       onPress={handleFlip}
       activeOpacity={1}
-      style={styles.cardContainer}
+      style={[styles.cardContainer, isLiked && styles.likedBorder]}
     >
       {isFlipped ? (
-        <View style={[styles.card, styles.cardBack]}>
+        <View
+          style={[styles.card, styles.cardBack, isLiked && styles.likedCard]}
+        >
           {renderIndicators()}
           <View style={styles.bottomContainer}>
+            <TouchableOpacity onPress={handleLike} style={styles.likeButton}>
+              <AntDesign
+                name={isLiked ? "heart" : "hearto"}
+                size={24}
+                color={isLiked ? colors.like : colors.textPrimary}
+              />
+            </TouchableOpacity>
             <Text style={styles.cityName}>{`City${cardId}`}</Text>
             <TouchableOpacity
               onPress={(e) => {
@@ -61,16 +100,18 @@ const FlippableCard = ({ navigation, cardId }) => {
               }}
               style={styles.detailButton}
             >
-              <AntDesign name="enter" size={24} color="black" />
+              <AntDesign name="enter" size={24} color={colors.textPrimary} />
             </TouchableOpacity>
           </View>
         </View>
       ) : (
-        <View style={[styles.card, styles.cardFront]}>
+        <View
+          style={[styles.card, styles.cardFront, isLiked && styles.likedCard]}
+        >
           <View style={styles.cardFrontTopRow}>
             <View />
             <View style={styles.internetContainer}>
-              <AntDesign name="wifi" size={24} color="white" />
+              <AntDesign name="wifi" size={24} color={colors.textOnPrimary} />
               <View style={styles.internetTextContainer}>
                 <Text style={styles.internetSpeed}>100</Text>
                 <Text style={styles.internetUnit}>Mbps</Text>
@@ -83,14 +124,18 @@ const FlippableCard = ({ navigation, cardId }) => {
           </View>
           <View style={styles.cardFrontBottomRow}>
             <View style={styles.weatherContainer}>
-              <Fontisto name="day-sunny" size={20} color="white" />
+              <Fontisto
+                name={weatherIcons["Clear"]} // Example usage, replace with actual weather data
+                size={20}
+                color={colors.textOnPrimary}
+              />
               <View style={styles.temperatureContainer}>
                 <Text style={styles.feelsLikeTemp}>
                   체감 35
                   <MaterialCommunityIcons
                     name="temperature-celsius"
                     size={10}
-                    color="white"
+                    color={colors.textOnPrimary}
                   />
                 </Text>
                 <Text style={styles.actualTemp}>
@@ -98,7 +143,7 @@ const FlippableCard = ({ navigation, cardId }) => {
                   <MaterialCommunityIcons
                     name="temperature-celsius"
                     size={14}
-                    color="white"
+                    color={colors.textOnPrimary}
                   />
                 </Text>
               </View>
@@ -122,15 +167,21 @@ const styles = StyleSheet.create({
   },
   card: {
     flex: 1,
-    borderRadius: 30,
+    borderRadius: 30, // cardContainer에서 이동
+    overflow: "hidden", // cardContainer에서 이동
     padding: 15,
   },
+  likedCard: {
+    borderWidth: 4,
+    borderColor: colors.like,
+    padding: 11, // 15 - 4 (borderWidth)
+  },
   cardFront: {
-    backgroundColor: "#5A4632",
+    backgroundColor: colors.primary,
     justifyContent: "space-between",
   },
   cardBack: {
-    backgroundColor: "#f0f0f0",
+    backgroundColor: colors.tabBarBackground,
     justifyContent: "space-between",
   },
   // Front Card Styles
@@ -148,12 +199,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   internetSpeed: {
-    color: "white",
+    color: colors.textOnPrimary,
     fontWeight: "bold",
     fontSize: 16,
   },
   internetUnit: {
-    color: "white",
+    color: colors.textOnPrimary,
     fontSize: 12,
   },
   centerTextContainer: {
@@ -162,12 +213,12 @@ const styles = StyleSheet.create({
   },
   provinceText: {
     fontSize: 18,
-    color: "white",
+    color: colors.textOnPrimary,
   },
   cityTextFront: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "white",
+    color: colors.textOnPrimary,
   },
   cardFrontBottomRow: {
     flexDirection: "row",
@@ -185,12 +236,12 @@ const styles = StyleSheet.create({
   },
   feelsLikeTemp: {
     fontSize: 10,
-    color: "white",
+    color: colors.textOnPrimary,
   },
   actualTemp: {
     fontSize: 14,
     fontWeight: "bold",
-    color: "white",
+    color: colors.textOnPrimary,
   },
   costContainer: {
     alignItems: "flex-end",
@@ -198,11 +249,11 @@ const styles = StyleSheet.create({
   costAmount: {
     fontSize: 16,
     fontWeight: "bold",
-    color: "white",
+    color: colors.textOnPrimary,
   },
   costLabel: {
     fontSize: 10,
-    color: "white",
+    color: colors.textOnPrimary,
   },
   // Back Card Styles
   indicatorsContainer: {
@@ -218,18 +269,18 @@ const styles = StyleSheet.create({
   indicatorName: {
     width: "30%",
     fontSize: 14,
-    color: "black",
+    color: colors.textPrimary,
   },
   gaugeBackground: {
     flex: 1,
     height: 10,
-    backgroundColor: "#e0e0e0",
+    backgroundColor: colors.border,
     borderRadius: 5,
     overflow: "hidden",
   },
   gaugeFill: {
     height: "100%",
-    backgroundColor: "#5A4632",
+    backgroundColor: colors.primary,
     borderRadius: 5,
   },
   bottomContainer: {
@@ -239,10 +290,15 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingTop: 10,
   },
+  likeButton: {
+    padding: 5,
+  },
   cityName: {
+    flex: 1, // 중앙 차지를 위해 flex: 1 추가
+    textAlign: "center", // 텍스트 중앙 정렬
     fontSize: 16,
     fontWeight: "bold",
-    color: "black",
+    color: colors.textPrimary,
   },
   detailButton: {
     padding: 5,
