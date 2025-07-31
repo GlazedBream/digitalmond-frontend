@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, TouchableOpacity, StyleSheet, ImageBackground } from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { Fontisto } from "@expo/vector-icons";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
@@ -15,9 +15,27 @@ const weatherIcons = {
   Thunderstorm: "lightning",
 };
 
+import { city01Images } from "../../assets/images";
+
+const cardImages = {
+  "1": city01Images,
+  // Add more cities here as needed
+};
+
 const FlippableCard = ({ navigation, cardId }) => {
   const [isFlipped, setIsFlipped] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  useEffect(() => {
+    const images = cardImages[cardId];
+    if (images && images.length > 1) {
+      const interval = setInterval(() => {
+        setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+      }, 3000); // Change image every 3 seconds
+      return () => clearInterval(interval);
+    }
+  }, [cardId]); // Reset interval when cardId changes
 
   const handleFlip = () => {
     setIsFlipped(!isFlipped);
@@ -105,9 +123,12 @@ const FlippableCard = ({ navigation, cardId }) => {
           </View>
         </View>
       ) : (
-        <View
+        <ImageBackground
+          source={cardImages[cardId] ? cardImages[cardId][currentImageIndex] : null}
           style={[styles.card, styles.cardFront, isLiked && styles.likedCard]}
+          resizeMode="cover"
         >
+          <View style={styles.cardFrontOverlay} />
           <View style={styles.cardFrontTopRow}>
             <View />
             <View style={styles.internetContainer}>
@@ -153,7 +174,7 @@ const FlippableCard = ({ navigation, cardId }) => {
               <Text style={styles.costLabel}>FOR A NOMAD</Text>
             </View>
           </View>
-        </View>
+        </ImageBackground>
       )}
     </TouchableOpacity>
   );
@@ -177,14 +198,18 @@ const styles = StyleSheet.create({
     padding: 11, // 15 - 4 (borderWidth)
   },
   cardFront: {
-    backgroundColor: colors.primary,
     justifyContent: "space-between",
+  },
+  cardFrontOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0,0,0,0.3)", // Semi-transparent overlay
+    borderRadius: 30,
   },
   cardBack: {
     backgroundColor: colors.tabBarBackground,
     justifyContent: "space-between",
   },
-  // Front Card Styles
+  
   cardFrontTopRow: {
     flexDirection: "row",
     justifyContent: "space-between",
