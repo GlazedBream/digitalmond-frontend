@@ -1,0 +1,37 @@
+import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+import colors from '../../styles/colors';
+import TopBar from '../../components/TopBar';
+import { useNavigation } from '@react-navigation/native';
+
+const CommunityScreen = () => {
+  const navigation = useNavigation();
+
+  return (
+    <View style={styles.container}>
+      <TopBar title="커뮤니티" onBackPress={() => navigation.goBack()} />
+      <View style={styles.content}>
+        <Text style={styles.text}>커뮤니티</Text>
+      </View>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  content: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  text: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: colors.textPrimary,
+  },
+});
+
+export default CommunityScreen;

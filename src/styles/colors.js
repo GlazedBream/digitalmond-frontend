@@ -9,6 +9,12 @@ const palette = {
     dark: '#7A6F66',   // 기존 secondary, inactiveTab
     deep: '#5A4632',   // 기존 primary
   },
+  pastel: {
+    green: '#A8D8B9',
+    red: '#F8B5B5',
+    yellow: '#FDFD96',
+    purple: '#C8A2C8',
+  },
   common: {
     black: '#1A1A1A',   // 기존 activeTab
     white: '#FFFFFF',
@@ -48,6 +54,14 @@ const colors = {
   error: palette.status.error,
   warning: palette.status.warning,
   like: palette.status.like,
+
+  // Living 스크린 카드 색상
+  living: {
+    convenience: palette.pastel.green,
+    emergency: palette.pastel.red,
+    community: palette.pastel.yellow,
+    comingSoon: palette.pastel.purple,
+  },
 };
 
 export default colors;
