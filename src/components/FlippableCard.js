@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, ImageBackground } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  ImageBackground,
+} from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { Fontisto } from "@expo/vector-icons";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
@@ -15,27 +21,27 @@ const weatherIcons = {
   Thunderstorm: "lightning",
 };
 
-import { city01Images } from "../../assets/images";
+import { city02Images } from "../../assets/images";
 
 const cardImages = {
-  "1": city01Images,
+  2: city02Images,
   // Add more cities here as needed
 };
 
-const FlippableCard = ({ navigation, cardId }) => {
+const FlippableCard = ({ navigation, cardData }) => {
   const [isFlipped, setIsFlipped] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   useEffect(() => {
-    const images = cardImages[cardId];
+    const images = cardImages[cardData.id];
     if (images && images.length > 1) {
       const interval = setInterval(() => {
         setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
       }, 3000); // Change image every 3 seconds
       return () => clearInterval(interval);
     }
-  }, [cardId]); // Reset interval when cardId changes
+  }, [cardData.id]); // Reset interval when cardId changes
 
   const handleFlip = () => {
     setIsFlipped(!isFlipped);
@@ -47,7 +53,7 @@ const FlippableCard = ({ navigation, cardId }) => {
   };
 
   const handleDetailPress = () => {
-    navigation.navigate("ExploreDetail", { cardId });
+    navigation.navigate("ExploreDetail", { cardId: cardData.id });
   };
 
   const renderIndicators = () => {
@@ -56,7 +62,7 @@ const FlippableCard = ({ navigation, cardId }) => {
       { name: "test2", value: 0.5 },
       { name: "test3", value: 0.9 },
       { name: "test4", value: 0.3 },
-      { name: "test5", value: 0.6 },
+      { name: "DN Score", value: cardData.dnScore / 100 }, // dnScore를 0-1 범위로 변환
     ];
 
     const getGaugeColor = (value) => {
@@ -98,8 +104,17 @@ const FlippableCard = ({ navigation, cardId }) => {
       style={[styles.cardContainer, isLiked && styles.likedBorder]}
     >
       <ImageBackground
-        source={cardImages[cardId] ? cardImages[cardId][currentImageIndex] : null}
-        style={[styles.card, styles.cardFront, { opacity: isFlipped ? 0 : 1 }, isLiked && styles.compensatedCard]} // compensatedCard 적용
+        source={
+          cardImages[cardData.id]
+            ? cardImages[cardData.id][currentImageIndex]
+            : null
+        }
+        style={[
+          styles.card,
+          styles.cardFront,
+          { opacity: isFlipped ? 0 : 1 },
+          isLiked && styles.compensatedCard,
+        ]} // compensatedCard 적용
         resizeMode="cover"
       >
         <View style={styles.cardFrontOverlay} />
@@ -114,8 +129,8 @@ const FlippableCard = ({ navigation, cardId }) => {
           </View>
         </View>
         <View style={styles.centerTextContainer}>
-          <Text style={styles.provinceText}>{`Province${cardId}`}</Text>
-          <Text style={styles.cityTextFront}>{`City${cardId}`}</Text>
+          <Text style={styles.provinceText}>{cardData.country}</Text>
+          <Text style={styles.cityTextFront}>{cardData.name}</Text>
         </View>
         <View style={styles.cardFrontBottomRow}>
           <View style={styles.weatherContainer}>
@@ -151,7 +166,12 @@ const FlippableCard = ({ navigation, cardId }) => {
       </ImageBackground>
 
       <View
-        style={[styles.card, styles.cardBack, { opacity: isFlipped ? 1 : 0 }, isLiked && styles.compensatedCard]} // compensatedCard 적용
+        style={[
+          styles.card,
+          styles.cardBack,
+          { opacity: isFlipped ? 1 : 0 },
+          isLiked && styles.compensatedCard,
+        ]} // compensatedCard 적용
       >
         {renderIndicators()}
         <View style={styles.bottomContainer}>
@@ -162,7 +182,7 @@ const FlippableCard = ({ navigation, cardId }) => {
               color={isLiked ? colors.like : colors.textPrimary}
             />
           </TouchableOpacity>
-          <Text style={styles.cityName}>{`City${cardId}`}</Text>
+          <Text style={styles.cityName}>{cardData.name}</Text>
           <TouchableOpacity
             onPress={(e) => {
               e.stopPropagation();
@@ -193,7 +213,7 @@ const styles = StyleSheet.create({
   card: {
     flex: 1,
     padding: 15,
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     left: 0,
     right: 0,
@@ -213,7 +233,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.tabBarBackground,
     justifyContent: "space-between",
   },
-  
+
   cardFrontTopRow: {
     flexDirection: "row",
     justifyContent: "space-between",
