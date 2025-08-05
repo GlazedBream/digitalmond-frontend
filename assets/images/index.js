@@ -13,10 +13,20 @@ export const yeongdoImages = [
   require("./yeongdo/02.jpg"),
 ];
 
+export const tongyeongImages = [
+  require("./tongyeong/01.jpg"),
+  require("./tongyeong/02.jpg"),
+];
+export const mokpoImages = [
+  require("./mokpo/01.jpg"),
+  require("./mokpo/02.jpg"),
+];
+export const sokchoImages = [
+  require("./sokcho/01.jpg"),
+  require("./sokcho/02.jpg"),
+];
+
 // Add empty arrays for other cities to prevent import errors
-export const tongyeongImages = [];
-export const mokpoImages = [];
-export const sokchoImages = [];
 export const yeongyangImages = [];
 export const hapcheonImages = [];
 export const gangneungImages = [];
