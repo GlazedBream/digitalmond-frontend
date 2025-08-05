@@ -44,7 +44,7 @@ export const citiesData = {
     },
     {
       id: 3,
-      name: "영도구",
+      name: "영도",
       province: "부산광역시",
       imageUrls: yeongdoImages,
       description: "부산항을 품은 섬 도시",
