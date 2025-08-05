@@ -12,13 +12,12 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import colors from "../styles/colors";
 
 const weatherIcons = {
-  Clouds: "cloudy",
-  Clear: "day-sunny",
-  Atmosphere: "cloudy-gusts",
-  Snow: "snow",
-  Rain: "rains",
-  Drizzle: "rain",
-  Thunderstorm: "lightning",
+  cloudy: "cloudy",
+  sunny: "day-sunny",
+  "partly-cloudy": "cloudy",
+  rainy: "rains",
+  snow: "snow",
+  // Add more mappings as needed
 };
 
 
@@ -152,13 +151,13 @@ const FlippableCard = ({ navigation, cardData, onLike, isLiked }) => {
         <View style={styles.cardFrontTopRow}>
           <View style={styles.weatherContainer}>
             <Fontisto
-              name={weatherIcons["Clear"]} // Example usage, replace with actual weather data
+              name={weatherIcons[cardData.weatherIcon]} // Use weatherIcon from cardData
               size={24}
               color={colors.textOnPrimary}
             />
             <View style={styles.temperatureContainer}>
               <Text style={styles.feelsLikeTemp}>
-                체감 35
+                체감 {cardData.feelsLikeTemperature}
                 <MaterialCommunityIcons
                   name="temperature-celsius"
                   size={10}
@@ -166,7 +165,7 @@ const FlippableCard = ({ navigation, cardData, onLike, isLiked }) => {
                 />
               </Text>
               <Text style={styles.actualTemp}>
-                32
+                {cardData.currentTemperature}
                 <MaterialCommunityIcons
                   name="temperature-celsius"
                   size={14}
@@ -178,7 +177,7 @@ const FlippableCard = ({ navigation, cardData, onLike, isLiked }) => {
           <View style={styles.internetContainer}>
             <AntDesign name="wifi" size={24} color={colors.textOnPrimary} />
             <View style={styles.internetTextContainer}>
-              <Text style={styles.internetSpeed}>100</Text>
+              <Text style={styles.internetSpeed}>{cardData.averageInternetSpeed}</Text>
               <Text style={styles.internetUnit}>Mbps</Text>
             </View>
           </View>
@@ -196,7 +195,7 @@ const FlippableCard = ({ navigation, cardData, onLike, isLiked }) => {
             />
           </TouchableOpacity>
           <View style={styles.costContainer}>
-            <Text style={styles.costAmount}>$2,000/mo</Text>
+            <Text style={styles.costAmount}>${cardData.costOfLiving}/mo</Text>
             <Text style={styles.costLabel}>FOR A NOMAD</Text>
           </View>
         </View>

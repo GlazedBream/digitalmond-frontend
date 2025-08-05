@@ -27,7 +27,12 @@ const ExploreScreen = ({ navigation }) => {
             liked: likedCityIds.includes(city.id),
           }));
 
-          updatedCities.sort((a, b) => b.liked - a.liked);
+          updatedCities.sort((a, b) => {
+            if (a.liked !== b.liked) {
+              return b.liked - a.liked; // Liked items come first
+            }
+            return a.id - b.id; // Then sort by id
+          });
           setCities(updatedCities);
         } catch (e) {
           console.error('Failed to load liked cities.', e);
@@ -45,7 +50,12 @@ const ExploreScreen = ({ navigation }) => {
         city.id === cityId ? { ...city, liked: !city.liked } : city
       );
 
-      updatedCities.sort((a, b) => b.liked - a.liked);
+            updatedCities.sort((a, b) => {
+        if (a.liked !== b.liked) {
+          return b.liked - a.liked; // Liked items come first
+        }
+        return a.id - b.id; // Then sort by id
+      });
       setCities(updatedCities);
 
       const likedCityIds = updatedCities.filter(city => city.liked).map(city => city.id);
