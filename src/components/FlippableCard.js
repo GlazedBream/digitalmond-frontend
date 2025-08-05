@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, memo } from "react";
 import {
   View,
   Text,
@@ -20,20 +20,17 @@ const weatherIcons = {
   // Add more mappings as needed
 };
 
-
 const FlippableCard = ({ navigation, cardData, onLike, isLiked }) => {
   const [isFlipped, setIsFlipped] = useState(false);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [localImageIndex, setLocalImageIndex] = useState(0);
 
   useEffect(() => {
-    const images = cardData.imageUrls;
-    if (images && images.length > 1) {
-      const interval = setInterval(() => {
-        setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
-      }, 3000); // Change image every 3 seconds
-      return () => clearInterval(interval);
-    }
-  }, [cardData.imageUrls]); // Reset interval when cardId changes
+    const interval = setInterval(() => {
+      setLocalImageIndex((prev) => prev + 1);
+    }, 3000); // 3초마다 전환
+
+    return () => clearInterval(interval);
+  }, []);
 
   const handleFlip = () => {
     setIsFlipped(!isFlipped);
@@ -84,8 +81,7 @@ const FlippableCard = ({ navigation, cardData, onLike, isLiked }) => {
                 {indicator.key === "activityLevel" ? (
                   <View style={styles.activityGauge}>
                     {["조용함", "중간", "활동적"].map((label, i) => {
-                      const isActive =
-                        getActivitySegment(value) === i;
+                      const isActive = getActivitySegment(value) === i;
                       return (
                         <View
                           key={label}
@@ -136,7 +132,7 @@ const FlippableCard = ({ navigation, cardData, onLike, isLiked }) => {
       <ImageBackground
         source={
           cardData.imageUrls && cardData.imageUrls.length > 0
-            ? cardData.imageUrls[currentImageIndex]
+            ? cardData.imageUrls[localImageIndex % cardData.imageUrls.length]
             : null
         }
         style={[
@@ -177,7 +173,9 @@ const FlippableCard = ({ navigation, cardData, onLike, isLiked }) => {
           <View style={styles.internetContainer}>
             <AntDesign name="wifi" size={24} color={colors.textOnPrimary} />
             <View style={styles.internetTextContainer}>
-              <Text style={styles.internetSpeed}>{cardData.averageInternetSpeed}</Text>
+              <Text style={styles.internetSpeed}>
+                {cardData.averageInternetSpeed}
+              </Text>
               <Text style={styles.internetUnit}>Mbps</Text>
             </View>
           </View>
@@ -417,4 +415,12 @@ const styles = StyleSheet.create({
   },
 });
 
-export default FlippableCard;
+function areEqual(prevProps, nextProps) {
+  return (
+    prevProps.cardData.id === nextProps.cardData.id &&
+    prevProps.isLiked === nextProps.isLiked &&
+    prevProps.currentImageIndex === nextProps.currentImageIndex
+  );
+}
+
+export default memo(FlippableCard, areEqual);
