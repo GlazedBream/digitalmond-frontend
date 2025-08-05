@@ -1,27 +1,59 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, FlatList, Text, ActivityIndicator } from 'react-native';
 import { useQuery } from '@tanstack/react-query';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import FlippableCard from '../components/FlippableCard';
 import globalStyles from '../styles/globalStyles';
-import { getCities } from '../api/cities';
+import { citiesData } from '../data/cities';
 import colors from '../styles/colors';
 
 const ExploreScreen = ({ navigation }) => {
-  const { data: cities, isLoading, isError, error } = useQuery({
+  const { data: initialCities, isLoading, isError, error } = useQuery({
     queryKey: ['cities'],
-    queryFn: getCities,
+    queryFn: () => citiesData,
   });
 
-  // --- DEBUG --- //
-  console.log('isLoading:', isLoading);
-  console.log('isError:', isError);
-  if (cities) {
-    console.log('Cities Data:', JSON.stringify(cities, null, 2));
-  }
-  if (error) {
-    console.log('Error:', error.message);
-  }
-  // --- END DEBUG --- //
+  const [cities, setCities] = useState([]);
+
+  useEffect(() => {
+    const loadLikedCities = async () => {
+      if (initialCities) {
+        try {
+          const likedCities = await AsyncStorage.getItem('likedCities');
+          const likedCityIds = likedCities ? JSON.parse(likedCities) : [];
+          
+          const updatedCities = initialCities.cities.map(city => ({
+            ...city,
+            liked: likedCityIds.includes(city.id),
+          }));
+
+          updatedCities.sort((a, b) => b.liked - a.liked);
+          setCities(updatedCities);
+        } catch (e) {
+          console.error('Failed to load liked cities.', e);
+          setCities(initialCities.cities);
+        }
+      }
+    };
+
+    loadLikedCities();
+  }, [initialCities]);
+
+  const handleLike = async (cityId) => {
+    try {
+      const updatedCities = cities.map(city =>
+        city.id === cityId ? { ...city, liked: !city.liked } : city
+      );
+
+      updatedCities.sort((a, b) => b.liked - a.liked);
+      setCities(updatedCities);
+
+      const likedCityIds = updatedCities.filter(city => city.liked).map(city => city.id);
+      await AsyncStorage.setItem('likedCities', JSON.stringify(likedCityIds));
+    } catch (e) {
+      console.error('Failed to save liked cities.', e);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -42,9 +74,14 @@ const ExploreScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <FlatList
-        data={cities?.cities} // API 응답 객체 안의 cities 배열을 전달
+        data={cities}
         renderItem={({ item }) => (
-          <FlippableCard navigation={navigation} cardData={item} />
+          <FlippableCard
+            navigation={navigation}
+            cardData={item}
+            onLike={handleLike}
+            isLiked={item.liked}
+          />
         )}
         keyExtractor={(item) => item.id.toString()}
         numColumns={2}

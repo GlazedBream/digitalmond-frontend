@@ -21,27 +21,20 @@ const weatherIcons = {
   Thunderstorm: "lightning",
 };
 
-import { city02Images } from "../../assets/images";
 
-const cardImages = {
-  2: city02Images,
-  // Add more cities here as needed
-};
-
-const FlippableCard = ({ navigation, cardData }) => {
+const FlippableCard = ({ navigation, cardData, onLike, isLiked }) => {
   const [isFlipped, setIsFlipped] = useState(false);
-  const [isLiked, setIsLiked] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   useEffect(() => {
-    const images = cardImages[cardData.id];
+    const images = cardData.imageUrls;
     if (images && images.length > 1) {
       const interval = setInterval(() => {
         setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
       }, 3000); // Change image every 3 seconds
       return () => clearInterval(interval);
     }
-  }, [cardData.id]); // Reset interval when cardId changes
+  }, [cardData.imageUrls]); // Reset interval when cardId changes
 
   const handleFlip = () => {
     setIsFlipped(!isFlipped);
@@ -49,7 +42,7 @@ const FlippableCard = ({ navigation, cardData }) => {
 
   const handleLike = (e) => {
     e.stopPropagation(); // 이벤트 버블링 방지
-    setIsLiked(!isLiked);
+    onLike(cardData.id);
   };
 
   const handleDetailPress = () => {
@@ -58,11 +51,11 @@ const FlippableCard = ({ navigation, cardData }) => {
 
   const renderIndicators = () => {
     const indicators = [
-      { name: "test1", value: 0.7 },
-      { name: "test2", value: 0.5 },
-      { name: "test3", value: 0.9 },
-      { name: "test4", value: 0.3 },
-      { name: "DN Score", value: cardData.dnScore / 100 }, // dnScore를 0-1 범위로 변환
+      { name: "Almond 인덱스", key: "almondIndex" },
+      { name: "물가", key: "costLevel" },
+      { name: "인터넷", key: "internetQuality" },
+      { name: "업무 환경", key: "workEnvironment" },
+      { name: "활동성", key: "activityLevel" },
     ];
 
     const getGaugeColor = (value) => {
@@ -75,24 +68,62 @@ const FlippableCard = ({ navigation, cardData }) => {
       return colors.error;
     };
 
+    const getActivitySegment = (value) => {
+      if (value < 0.33) return 0; // 조용함
+      if (value < 0.66) return 1; // 중간
+      return 2; // 활동적
+    };
+
     return (
       <View style={styles.indicatorsContainer}>
-        {indicators.map((indicator, index) => (
-          <View key={index} style={styles.indicatorRow}>
-            <Text style={styles.indicatorName}>{indicator.name}</Text>
-            <View style={styles.gaugeBackground}>
-              <View
-                style={[
-                  styles.gaugeFill,
-                  {
-                    width: `${indicator.value * 100}%`,
-                    backgroundColor: getGaugeColor(indicator.value),
-                  },
-                ]}
-              />
+        {indicators.map((indicator, index) => {
+          const value = cardData[indicator.key] / 100; // 데이터는 0-100 범위라고 가정
+          return (
+            <View key={index} style={styles.indicatorWrapper}>
+              <View style={styles.indicatorRow}>
+                <Text style={styles.indicatorName}>{indicator.name}</Text>
+                {indicator.key === "activityLevel" ? (
+                  <View style={styles.activityGauge}>
+                    {["조용함", "중간", "활동적"].map((label, i) => {
+                      const isActive =
+                        getActivitySegment(value) === i;
+                      return (
+                        <View
+                          key={label}
+                          style={[
+                            styles.activitySegment,
+                            isActive && styles.activeSegment,
+                          ]}
+                        >
+                          <Text
+                            style={[
+                              styles.segmentText,
+                              isActive && styles.activeSegmentText,
+                            ]}
+                          >
+                            {label}
+                          </Text>
+                        </View>
+                      );
+                    })}
+                  </View>
+                ) : (
+                  <View style={styles.gaugeBackground}>
+                    <View
+                      style={[
+                        styles.gaugeFill,
+                        {
+                          width: `${value * 100}%`,
+                          backgroundColor: getGaugeColor(value),
+                        },
+                      ]}
+                    />
+                  </View>
+                )}
+              </View>
             </View>
-          </View>
-        ))}
+          );
+        })}
       </View>
     );
   };
@@ -105,8 +136,8 @@ const FlippableCard = ({ navigation, cardData }) => {
     >
       <ImageBackground
         source={
-          cardImages[cardData.id]
-            ? cardImages[cardData.id][currentImageIndex]
+          cardData.imageUrls && cardData.imageUrls.length > 0
+            ? cardData.imageUrls[currentImageIndex]
             : null
         }
         style={[
@@ -119,24 +150,10 @@ const FlippableCard = ({ navigation, cardData }) => {
       >
         <View style={styles.cardFrontOverlay} />
         <View style={styles.cardFrontTopRow}>
-          <View />
-          <View style={styles.internetContainer}>
-            <AntDesign name="wifi" size={24} color={colors.textOnPrimary} />
-            <View style={styles.internetTextContainer}>
-              <Text style={styles.internetSpeed}>100</Text>
-              <Text style={styles.internetUnit}>Mbps</Text>
-            </View>
-          </View>
-        </View>
-        <View style={styles.centerTextContainer}>
-          <Text style={styles.provinceText}>{cardData.country}</Text>
-          <Text style={styles.cityTextFront}>{cardData.name}</Text>
-        </View>
-        <View style={styles.cardFrontBottomRow}>
           <View style={styles.weatherContainer}>
             <Fontisto
               name={weatherIcons["Clear"]} // Example usage, replace with actual weather data
-              size={20}
+              size={24}
               color={colors.textOnPrimary}
             />
             <View style={styles.temperatureContainer}>
@@ -158,6 +175,26 @@ const FlippableCard = ({ navigation, cardData }) => {
               </Text>
             </View>
           </View>
+          <View style={styles.internetContainer}>
+            <AntDesign name="wifi" size={24} color={colors.textOnPrimary} />
+            <View style={styles.internetTextContainer}>
+              <Text style={styles.internetSpeed}>100</Text>
+              <Text style={styles.internetUnit}>Mbps</Text>
+            </View>
+          </View>
+        </View>
+        <View style={styles.centerTextContainer}>
+          <Text style={styles.provinceText}>{cardData.province}</Text>
+          <Text style={styles.cityTextFront}>{cardData.name}</Text>
+        </View>
+        <View style={styles.cardFrontBottomRow}>
+          <TouchableOpacity onPress={handleLike} style={styles.likeButton}>
+            <AntDesign
+              name={isLiked ? "heart" : "hearto"}
+              size={24}
+              color={isLiked ? colors.like : colors.textOnPrimary}
+            />
+          </TouchableOpacity>
           <View style={styles.costContainer}>
             <Text style={styles.costAmount}>$2,000/mo</Text>
             <Text style={styles.costLabel}>FOR A NOMAD</Text>
@@ -272,23 +309,22 @@ const styles = StyleSheet.create({
   cardFrontBottomRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "flex-end",
+    alignItems: "center",
   },
   weatherContainer: {
     flexDirection: "row",
     alignItems: "center",
     flexShrink: 1, // Allow this container to shrink
-    marginRight: 10, // Add margin to create space
   },
   temperatureContainer: {
     marginLeft: 6,
   },
   feelsLikeTemp: {
-    fontSize: 10,
+    fontSize: 12,
     color: colors.textOnPrimary,
   },
   actualTemp: {
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: "bold",
     color: colors.textOnPrimary,
   },
@@ -310,13 +346,16 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "space-around",
   },
+  indicatorWrapper: {
+    flex: 1,
+    justifyContent: "center",
+  },
   indicatorRow: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 10,
   },
   indicatorName: {
-    width: "30%",
+    width: "35%",
     fontSize: 14,
     color: colors.textPrimary,
   },
@@ -332,12 +371,37 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
     borderRadius: 5,
   },
+  activityGauge: {
+    flex: 1,
+    flexDirection: "row",
+    height: 20, // 높이를 게이지와 유사하게 설정
+    borderRadius: 5,
+    overflow: "hidden",
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  activitySegment: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: colors.tabBarBackground, // 비활성 색상
+  },
+  activeSegment: {
+    backgroundColor: colors.primary, // 활성 색상
+  },
+  segmentText: {
+    fontSize: 10,
+    color: colors.textSecondary,
+  },
+  activeSegmentText: {
+    color: colors.textOnPrimary,
+    fontWeight: "bold",
+  },
   bottomContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     width: "100%",
-    paddingTop: 10,
   },
   likeButton: {
     padding: 5,
