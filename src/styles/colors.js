@@ -37,6 +37,7 @@ const colors = {
   secondary: palette.almond.dark,
   background: palette.almond.medium,
   surface: palette.common.white, // 카드, 모달 등 표면 색상
+  dropdownBackground: palette.almond.light, // 드롭다운 배경색
   border: palette.common.grey,
 
   // 텍스트

@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   ImageBackground,
+  ActivityIndicator,
 } from "react-native";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { Fontisto } from "@expo/vector-icons";
@@ -23,6 +24,7 @@ const weatherIcons = {
 const FlippableCard = ({ navigation, cardData, onLike, isLiked }) => {
   const [isFlipped, setIsFlipped] = useState(false);
   const [localImageIndex, setLocalImageIndex] = useState(0);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -142,61 +144,67 @@ const FlippableCard = ({ navigation, cardData, onLike, isLiked }) => {
           isLiked && styles.compensatedCard,
         ]} // compensatedCard 적용
         resizeMode="cover"
+        onLoad={() => setImageLoaded(true)}
       >
-        <View style={styles.cardFrontOverlay} />
-        <View style={styles.cardFrontTopRow}>
-          <View style={styles.weatherContainer}>
-            <Fontisto
-              name={weatherIcons[cardData.weatherIcon]} // Use weatherIcon from cardData
-              size={24}
-              color={colors.textOnPrimary}
-            />
-            <View style={styles.temperatureContainer}>
-              <Text style={styles.feelsLikeTemp}>
-                체감 {cardData.feelsLikeTemperature}
-                <MaterialCommunityIcons
-                  name="temperature-celsius"
-                  size={10}
+        {!imageLoaded && <ActivityIndicator size="large" color={colors.primary} />}
+        {imageLoaded && (
+          <>
+            <View style={styles.cardFrontOverlay} />
+            <View style={styles.cardFrontTopRow}>
+              <View style={styles.weatherContainer}>
+                <Fontisto
+                  name={weatherIcons[cardData.weatherIcon]} // Use weatherIcon from cardData
+                  size={24}
                   color={colors.textOnPrimary}
                 />
-              </Text>
-              <Text style={styles.actualTemp}>
-                {cardData.currentTemperature}
-                <MaterialCommunityIcons
-                  name="temperature-celsius"
-                  size={14}
-                  color={colors.textOnPrimary}
+                <View style={styles.temperatureContainer}>
+                  <Text style={styles.feelsLikeTemp}>
+                    체감 {cardData.feelsLikeTemperature}
+                    <MaterialCommunityIcons
+                      name="temperature-celsius"
+                      size={10}
+                      color={colors.textOnPrimary}
+                    />
+                  </Text>
+                  <Text style={styles.actualTemp}>
+                    {cardData.currentTemperature}
+                    <MaterialCommunityIcons
+                      name="temperature-celsius"
+                      size={14}
+                      color={colors.textOnPrimary}
+                    />
+                  </Text>
+                </View>
+              </View>
+              <View style={styles.internetContainer}>
+                <AntDesign name="wifi" size={24} color={colors.textOnPrimary} />
+                <View style={styles.internetTextContainer}>
+                  <Text style={styles.internetSpeed}>
+                    {cardData.averageInternetSpeed}
+                  </Text>
+                  <Text style={styles.internetUnit}>Mbps</Text>
+                </View>
+              </View>
+            </View>
+            <View style={styles.centerTextContainer}>
+              <Text style={styles.provinceText}>{cardData.province}</Text>
+              <Text style={styles.cityTextFront}>{cardData.name}</Text>
+            </View>
+            <View style={styles.cardFrontBottomRow}>
+              <TouchableOpacity onPress={handleLike} style={styles.likeButton}>
+                <AntDesign
+                  name={isLiked ? "heart" : "hearto"}
+                  size={24}
+                  color={isLiked ? colors.like : colors.textOnPrimary}
                 />
-              </Text>
+              </TouchableOpacity>
+              <View style={styles.costContainer}>
+                <Text style={styles.costAmount}>${cardData.costOfLiving}/mo</Text>
+                <Text style={styles.costLabel}>FOR A NOMAD</Text>
+              </View>
             </View>
-          </View>
-          <View style={styles.internetContainer}>
-            <AntDesign name="wifi" size={24} color={colors.textOnPrimary} />
-            <View style={styles.internetTextContainer}>
-              <Text style={styles.internetSpeed}>
-                {cardData.averageInternetSpeed}
-              </Text>
-              <Text style={styles.internetUnit}>Mbps</Text>
-            </View>
-          </View>
-        </View>
-        <View style={styles.centerTextContainer}>
-          <Text style={styles.provinceText}>{cardData.province}</Text>
-          <Text style={styles.cityTextFront}>{cardData.name}</Text>
-        </View>
-        <View style={styles.cardFrontBottomRow}>
-          <TouchableOpacity onPress={handleLike} style={styles.likeButton}>
-            <AntDesign
-              name={isLiked ? "heart" : "hearto"}
-              size={24}
-              color={isLiked ? colors.like : colors.textOnPrimary}
-            />
-          </TouchableOpacity>
-          <View style={styles.costContainer}>
-            <Text style={styles.costAmount}>${cardData.costOfLiving}/mo</Text>
-            <Text style={styles.costLabel}>FOR A NOMAD</Text>
-          </View>
-        </View>
+          </>
+        )}
       </ImageBackground>
 
       <View

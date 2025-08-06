@@ -28,7 +28,8 @@ export const citiesData = {
       costLevel: 53,
       internetQuality: 76,
       workEnvironment: 66,
-      activityLevel: 45,
+      activityLevel: 45, // 0-100, 중간
+      tags: ["20s", "30s", "solo", "couple", "local_experience"],
       weatherIcon: "cloudy",
       currentTemperature: 25,
       feelsLikeTemperature: 27,
@@ -45,7 +46,8 @@ export const citiesData = {
       costLevel: 55,
       internetQuality: 78,
       workEnvironment: 65,
-      activityLevel: 40,
+      activityLevel: 40, // 중간
+      tags: ["30s", "40s", "family", "culture_art"],
       weatherIcon: "sunny",
       currentTemperature: 28,
       feelsLikeTemperature: 29,
@@ -62,7 +64,8 @@ export const citiesData = {
       costLevel: 58,
       internetQuality: 81,
       workEnvironment: 70,
-      activityLevel: 55,
+      activityLevel: 68, // 활동적
+      tags: ["20s", "solo", "couple", "local_experience"],
       weatherIcon: "rainy",
       currentTemperature: 23,
       feelsLikeTemperature: 24,
@@ -79,7 +82,8 @@ export const citiesData = {
       costLevel: 60,
       internetQuality: 72,
       workEnvironment: 60,
-      activityLevel: 45,
+      activityLevel: 45, // 중간
+      tags: ["30s", "couple", "family", "culture_art"],
       weatherIcon: "partly-cloudy",
       currentTemperature: 26,
       feelsLikeTemperature: 28,
@@ -96,7 +100,8 @@ export const citiesData = {
       costLevel: 52,
       internetQuality: 69,
       workEnvironment: 60,
-      activityLevel: 50,
+      activityLevel: 50, // 중간
+      tags: ["40s", "50s", "couple", "family", "local_experience"],
       weatherIcon: "sunny",
       currentTemperature: 27,
       feelsLikeTemperature: 28,
@@ -113,7 +118,8 @@ export const citiesData = {
       costLevel: 57,
       internetQuality: 80,
       workEnvironment: 68,
-      activityLevel: 58,
+      activityLevel: 70, // 활동적
+      tags: ["20s", "30s", "solo", "couple", "nature_friendly"],
       weatherIcon: "cloudy",
       currentTemperature: 22,
       feelsLikeTemperature: 23,
@@ -130,7 +136,8 @@ export const citiesData = {
       costLevel: 40,
       internetQuality: 60,
       workEnvironment: 50,
-      activityLevel: 30,
+      activityLevel: 30, // 조용함
+      tags: ["40s", "50s", "family", "nature_friendly"],
       weatherIcon: "sunny",
       currentTemperature: 29,
       feelsLikeTemperature: 30,
@@ -147,7 +154,8 @@ export const citiesData = {
       costLevel: 45,
       internetQuality: 65,
       workEnvironment: 55,
-      activityLevel: 35,
+      activityLevel: 31, // 조용함
+      tags: ["50s", ">60", "family", "culture_art", "nature_friendly"],
       weatherIcon: "partly-cloudy",
       currentTemperature: 26,
       feelsLikeTemperature: 27,
@@ -164,7 +172,8 @@ export const citiesData = {
       costLevel: 62,
       internetQuality: 82,
       workEnvironment: 75,
-      activityLevel: 65,
+      activityLevel: 72, // 활동적
+      tags: ["20s", "30s", "solo", "couple", "work_environment"],
       weatherIcon: "sunny",
       currentTemperature: 24,
       feelsLikeTemperature: 25,
@@ -181,7 +190,8 @@ export const citiesData = {
       costLevel: 58,
       internetQuality: 75,
       workEnvironment: 70,
-      activityLevel: 55,
+      activityLevel: 68, // 활동적
+      tags: ["20s", "solo", "nature_friendly"],
       weatherIcon: "rainy",
       currentTemperature: 21,
       feelsLikeTemperature: 22,
@@ -198,7 +208,8 @@ export const citiesData = {
       costLevel: 50,
       internetQuality: 70,
       workEnvironment: 60,
-      activityLevel: 40,
+      activityLevel: 40, // 중간
+      tags: ["40s", "family", "nature_friendly"],
       weatherIcon: "cloudy",
       currentTemperature: 20,
       feelsLikeTemperature: 21,
@@ -215,7 +226,8 @@ export const citiesData = {
       costLevel: 55,
       internetQuality: 78,
       workEnvironment: 66,
-      activityLevel: 42,
+      activityLevel: 42, // 중간
+      tags: ["30s", "family", "nature_friendly"],
       weatherIcon: "sunny",
       currentTemperature: 23,
       feelsLikeTemperature: 24,
@@ -232,7 +244,8 @@ export const citiesData = {
       costLevel: 53,
       internetQuality: 76,
       workEnvironment: 60,
-      activityLevel: 40,
+      activityLevel: 40, // 중간
+      tags: ["<20", "20s", "family", "nature_friendly"],
       weatherIcon: "partly-cloudy",
       currentTemperature: 25,
       feelsLikeTemperature: 26,
