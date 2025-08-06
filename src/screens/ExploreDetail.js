@@ -16,11 +16,13 @@ import Tab3 from "./ExploreDetailTabs/Tab3";
 import Tab4 from "./ExploreDetailTabs/Tab4";
 import Tab5 from "./ExploreDetailTabs/Tab5";
 import colors from "../styles/colors";
-import { getCityById } from "../api/cities";
+import { citiesData } from "../data/cities";
 
 const ExploreDetail = ({ route, navigation }) => {
   const { cardId } = route.params;
   const layout = useWindowDimensions();
+
+  console.log("ExploreDetail - cardId:", cardId);
 
   const {
     data: cityData,
@@ -29,16 +31,23 @@ const ExploreDetail = ({ route, navigation }) => {
     error,
   } = useQuery({
     queryKey: ["city", cardId],
-    queryFn: () => getCityById(cardId),
+    queryFn: () => {
+      const foundCity = citiesData.cities.find(city => city.id === cardId);
+      console.log("ExploreDetail - cityData from queryFn:", foundCity);
+      return foundCity;
+    },
   });
+
+  console.log("ExploreDetail - cityData (after query):");
+  console.log(cityData);
 
   const [index, setIndex] = useState(0);
   const [routes] = useState([
-    { key: "tab1", title: "Tab1" },
-    { key: "tab2", title: "Tab2" },
-    { key: "tab3", title: "Tab3" },
-    { key: "tab4", title: "Tab4" },
-    { key: "tab5", title: "Tab5" },
+    { key: "tab1", title: "기본 정보" },
+    { key: "tab2", title: "생활 정보" },
+    { key: "tab3", title: "커뮤니티" },
+    { key: "tab4", title: "미션" },
+    { key: "tab5", title: "통계" },
   ]);
 
   const [isJoined, setIsJoined] = useState(false);
@@ -64,11 +73,11 @@ const ExploreDetail = ({ route, navigation }) => {
   }
 
   const renderScene = SceneMap({
-    tab1: () => <Tab1 cityData={cityData} />,
-    tab2: () => <Tab2 cityData={cityData} />,
-    tab3: () => <Tab3 cityData={cityData} />,
-    tab4: () => <Tab4 cityData={cityData} />,
-    tab5: () => <Tab5 cityData={cityData} />,
+    tab1: () => cityData ? <Tab1 cityData={cityData} /> : <View />,
+    tab2: () => cityData ? <Tab2 cityData={cityData} /> : <View />,
+    tab3: () => cityData ? <Tab3 cityData={cityData} /> : <View />,
+    tab4: () => cityData ? <Tab4 cityData={cityData} /> : <View />,
+    tab5: () => cityData ? <Tab5 cityData={cityData} /> : <View />,
   });
 
   return (

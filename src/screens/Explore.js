@@ -86,9 +86,6 @@ const ExploreScreen = ({ navigation }) => {
     const applyFiltersAndSort = async () => {
       if (initialCities) {
         try {
-          const likedCities = await AsyncStorage.getItem("likedCities");
-          const likedCityIds = likedCities ? JSON.parse(likedCities) : [];
-
           let processedCities = initialCities.cities.map((city) => ({
             ...city,
             liked: likedCityIds.includes(city.id),
@@ -133,6 +130,14 @@ const ExploreScreen = ({ navigation }) => {
           });
 
           setCities(processedCities);
+          console.log("4. processedCities (before setCities):");
+          processedCities.forEach(city => console.log(`  ${city.name}: liked=${city.liked}, matchScore=${city.matchScore}`));
+          console.log("5. Current Filters:", {
+            ageGroup: ageGroup?.value,
+            companion: companion?.value,
+            activityLevel: activityLevel?.value,
+            preference: preference?.value,
+          });
 
         } catch (e) {
           console.error("Failed to load liked cities or apply filters.", e);
@@ -147,28 +152,17 @@ const ExploreScreen = ({ navigation }) => {
   const handleLike = useCallback(
     async (cityId) => {
       try {
-        const updatedCities = cities.map((city) =>
-          city.id === cityId ? { ...city, liked: !city.liked } : city
-        );
+        const newLikedCityIds = likedCityIds.includes(cityId)
+          ? likedCityIds.filter((id) => id !== cityId)
+          : [...likedCityIds, cityId];
 
-        updatedCities.sort((a, b) => {
-          if (a.liked !== b.liked) {
-            return b.liked - a.liked; // Liked items come first
-          }
-          return a.id - b.id; // Then sort by id
-        });
-        setCities(updatedCities);
-
-        const likedCityIds = updatedCities
-          .filter((city) => city.liked)
-          .map((city) => city.id);
-        await AsyncStorage.setItem("likedCities", JSON.stringify(likedCityIds));
-        setLikedCityIds(likedCityIds); // 상태 업데이트
+        await AsyncStorage.setItem("likedCities", JSON.stringify(newLikedCityIds));
+        setLikedCityIds(newLikedCityIds); // 상태 업데이트
       } catch (e) {
         console.error("Failed to save liked cities.", e);
       }
     },
-    [cities]
+    [likedCityIds] // 의존성 배열 수정
   );
 
   if (isLoading) {

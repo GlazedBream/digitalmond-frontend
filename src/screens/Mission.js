@@ -1,37 +1,49 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, SafeAreaView } from 'react-native';
-import colors from '../styles/colors';
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+  SafeAreaView,
+} from "react-native";
+import colors from "../styles/colors";
 
-const initialMissions = [
-  { id: '1', title: '가이드 미션: 체류 시작하기', completed: false },
-  { id: '2', title: '현지 음식 체험: 안동 찜닭 먹기', completed: false },
-  { id: '3', title: '이벤트 체험: 안동 국제 탈춤 페스티벌 방문', completed: false },
-  { id: '4', title: '관광명소 방문: 하회마을 둘러보기', completed: false },
-  { id: '5', title: '커뮤니티 활동: 첫 게시글 작성하기', completed: false },
-];
+import { missionsData } from "../data/missions";
 
 const MissionScreen = () => {
-  const [missions, setMissions] = useState(initialMissions);
+  const [missions, setMissions] = useState(missionsData);
 
   const toggleComplete = (id) => {
     setMissions(
       missions.map((mission) =>
-        mission.id === id ? { ...mission, completed: !mission.completed } : mission
+        mission.id === id
+          ? { ...mission, completed: !mission.completed }
+          : mission
       )
     );
   };
 
   const renderItem = ({ item }) => (
     <View style={styles.missionItem}>
-      <Text style={[styles.missionTitle, item.completed && styles.completedText]}>
-        {item.title}
-      </Text>
-      <TouchableOpacity 
-        style={[styles.button, item.completed ? styles.completedButton : styles.incompleteButton]}
+      <View style={styles.missionContent}>
+        <Text
+          style={[styles.missionTitle, item.completed && styles.completedText]}
+        >
+          {item.title}
+        </Text>
+        <Text style={styles.missionDescription}>{item.description}</Text>
+        <Text style={styles.missionHint}>힌트: {item.hint}</Text>
+      </View>
+      <TouchableOpacity
+        style={[
+          styles.button,
+          item.completed ? styles.completedButton : styles.incompleteButton,
+        ]}
         onPress={() => toggleComplete(item.id)}
       >
         <Text style={styles.buttonText}>
-          {item.completed ? '완료 취소' : '완료 확인'}
+          {item.completed ? " 완료 됨  " : "완료 확인"}
         </Text>
       </TouchableOpacity>
     </View>
@@ -43,7 +55,9 @@ const MissionScreen = () => {
         data={missions}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
-        ListHeaderComponent={() => <Text style={styles.header}>Almond를 모아보세요!</Text>}
+        ListHeaderComponent={() => (
+          <Text style={styles.header}>Almond를 모아보세요!</Text>
+        )}
         contentContainerStyle={styles.listContainer}
       />
     </SafeAreaView>
@@ -60,24 +74,28 @@ const styles = StyleSheet.create({
   },
   header: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: colors.textPrimary,
     marginBottom: 20,
-    textAlign: 'center',
+    textAlign: "center",
   },
   missionItem: {
     backgroundColor: colors.surface,
     borderRadius: 10,
     padding: 15,
     marginBottom: 10,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
     elevation: 2,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
     shadowRadius: 1,
+  },
+  missionContent: {
+    flex: 1,
+    marginRight: 10,
   },
   missionTitle: {
     fontSize: 16,
@@ -85,23 +103,22 @@ const styles = StyleSheet.create({
     flex: 1, // Ensure text wraps
   },
   completedText: {
-    textDecorationLine: 'line-through',
+    textDecorationLine: "line-through",
     color: colors.textSecondary,
   },
   button: {
-    paddingVertical: 8,
-    paddingHorizontal: 12,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
     borderRadius: 20,
   },
   incompleteButton: {
     backgroundColor: colors.primary,
   },
   completedButton: {
-    backgroundColor: colors.grey,
+    backgroundColor: colors.secondary,
   },
   buttonText: {
-    color: colors.white,
-    fontWeight: 'bold',
+    color: colors.textOnPrimary,
   },
 });
 

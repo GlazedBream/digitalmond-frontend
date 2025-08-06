@@ -1,34 +1,73 @@
-import React, { useState } from 'react';
-import { 
-  View, Text, StyleSheet, Dimensions, ScrollView, TextInput, TouchableOpacity, FlatList, SafeAreaView 
-} from 'react-native';
-import Swiper from 'react-native-swiper';
-import colors from '../styles/colors';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Dimensions,
+  ScrollView,
+  TextInput,
+  TouchableOpacity,
+  FlatList,
+  SafeAreaView,
+} from "react-native";
+import Swiper from "react-native-swiper";
+import colors from "../styles/colors";
+import Icon from "react-native-vector-icons/MaterialIcons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get("window");
 
 const bannerItems = [
-  '안동시에 거주한 지 5일째',
-  '관심있을만한 관광명소',
-  '곧 열릴 축제',
-  '화제의 게시글',
+  "영도구에 거주한 지 5일째",
+  "관심있을만한 관광명소",
+  "곧 열릴 축제",
+  "화제의 게시글",
 ];
 
 const HomeScreen = () => {
   const [todos, setTodos] = useState([]);
-  const [text, setText] = useState('');
+  const [text, setText] = useState("");
   const [editingId, setEditingId] = useState(null);
+
+  useEffect(() => {
+    const loadTodos = async () => {
+      try {
+        const storedTodos = await AsyncStorage.getItem("todos");
+        if (storedTodos) {
+          setTodos(JSON.parse(storedTodos));
+        }
+      } catch (e) {
+        console.error("Failed to load todos.", e);
+      }
+    };
+    loadTodos();
+  }, []);
+
+  useEffect(() => {
+    const saveTodos = async () => {
+      try {
+        await AsyncStorage.setItem("todos", JSON.stringify(todos));
+      } catch (e) {
+        console.error("Failed to save todos.", e);
+      }
+    };
+    saveTodos();
+  }, [todos]);
 
   const addTodo = () => {
     if (text.trim().length === 0) return;
     if (editingId) {
-      setTodos(todos.map(todo => todo.id === editingId ? { ...todo, text } : todo));
+      setTodos(
+        todos.map((todo) => (todo.id === editingId ? { ...todo, text } : todo))
+      );
       setEditingId(null);
     } else {
-      setTodos([...todos, { id: Date.now().toString(), text, completed: false }]);
+      setTodos([
+        ...todos,
+        { id: Date.now().toString(), text, completed: false },
+      ]);
     }
-    setText('');
+    setText("");
   };
 
   const startEditing = (todo) => {
@@ -37,22 +76,31 @@ const HomeScreen = () => {
   };
 
   const toggleComplete = (id) => {
-    setTodos(todos.map(todo => todo.id === id ? { ...todo, completed: !todo.completed } : todo));
+    setTodos(
+      todos.map((todo) =>
+        todo.id === id ? { ...todo, completed: !todo.completed } : todo
+      )
+    );
   };
 
   const deleteTodo = (id) => {
-    setTodos(todos.filter(todo => todo.id !== id));
+    setTodos(todos.filter((todo) => todo.id !== id));
   };
 
   const renderTodo = ({ item }) => (
     <View style={styles.todoItem}>
-      <TouchableOpacity onPress={() => toggleComplete(item.id)} style={styles.todoTextContainer}>
-        <Icon 
-          name={item.completed ? 'check-box' : 'check-box-outline-blank'} 
-          size={24} 
+      <TouchableOpacity
+        onPress={() => toggleComplete(item.id)}
+        style={styles.todoTextContainer}
+      >
+        <Icon
+          name={item.completed ? "check-box" : "check-box-outline-blank"}
+          size={24}
           color={item.completed ? colors.grey : colors.primary}
         />
-        <Text style={[styles.todoText, item.completed && styles.todoTextCompleted]}>
+        <Text
+          style={[styles.todoText, item.completed && styles.todoTextCompleted]}
+        >
           {item.text}
         </Text>
       </TouchableOpacity>
@@ -60,7 +108,10 @@ const HomeScreen = () => {
         <TouchableOpacity onPress={() => startEditing(item)}>
           <Icon name="edit" size={24} color={colors.primary} />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => deleteTodo(item.id)} style={{ marginLeft: 10 }}>
+        <TouchableOpacity
+          onPress={() => deleteTodo(item.id)}
+          style={{ marginLeft: 10 }}
+        >
           <Icon name="delete" size={24} color={colors.error} />
         </TouchableOpacity>
       </View>
@@ -98,13 +149,15 @@ const HomeScreen = () => {
               onChangeText={setText}
             />
             <TouchableOpacity style={styles.addButton} onPress={addTodo}>
-              <Text style={styles.addButtonText}>{editingId ? 'Update' : 'Add'}</Text>
+              <Text style={styles.addButtonText}>
+                {editingId ? "Update" : "Add"}
+              </Text>
             </TouchableOpacity>
           </View>
           <FlatList
             data={todos}
             renderItem={renderTodo}
-            keyExtractor={item => item.id}
+            keyExtractor={(item) => item.id}
             scrollEnabled={false} // To allow parent ScrollView to control scrolling
           />
         </View>
@@ -129,8 +182,8 @@ const styles = StyleSheet.create({
   wrapper: {},
   slide: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     backgroundColor: colors.primary,
     borderRadius: 10,
     marginHorizontal: 15,
@@ -138,13 +191,13 @@ const styles = StyleSheet.create({
   slideText: {
     color: colors.textOnPrimary,
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   pagination: {
     bottom: 10,
   },
   dot: {
-    backgroundColor: 'rgba(255,255,255,.3)',
+    backgroundColor: "rgba(255,255,255,.3)",
     width: 8,
     height: 8,
     borderRadius: 4,
@@ -164,12 +217,12 @@ const styles = StyleSheet.create({
   },
   todoHeader: {
     fontSize: 22,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: colors.textPrimary,
     marginBottom: 10,
   },
   inputContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginBottom: 20,
   },
   input: {
@@ -183,26 +236,26 @@ const styles = StyleSheet.create({
   },
   addButton: {
     backgroundColor: colors.primary,
-    padding: 10,
+    paddingVertical: 12,
+    paddingHorizontal: 15,
     borderRadius: 5,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   addButtonText: {
-    color: colors.white,
-    fontWeight: 'bold',
+    color: colors.textOnPrimary,
   },
   todoItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     backgroundColor: colors.card,
     padding: 15,
     borderRadius: 5,
     marginBottom: 10,
   },
   todoTextContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     flex: 1,
   },
   todoText: {
@@ -210,11 +263,11 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   todoTextCompleted: {
-    textDecorationLine: 'line-through',
+    textDecorationLine: "line-through",
     color: colors.textSecondary,
   },
   todoButtons: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
 });
 
