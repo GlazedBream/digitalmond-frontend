@@ -13,12 +13,11 @@ import colors from "../styles/colors";
 import { AuthContext } from "../context/AuthContext";
 import { useFilter } from "../context/FilterContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { dummyUser } from "../data/users";
+import { citiesData } from "../data/cities";
 
 const filterLabels = {
   ageGroup: {
-    "<20": "20대 미만",
-    "20s": "20대",
+    "<30": "20대 이하",
     "30s": "30대",
     "40s": "40대",
     "50s": "50대",
@@ -50,11 +49,18 @@ const initialRouteOptions = [
 ];
 
 export default function MyPageScreen() {
-  const { logout } = useContext(AuthContext);
+  const { authState, logout } = useContext(AuthContext);
   const { ageGroup, companion, activityLevel, preference } = useFilter();
-  const [user, setUser] = useState(dummyUser.user);
   const [profileImage, setProfileImage] = useState(null);
   const [selectedInitialRoute, setSelectedInitialRoute] = useState(null);
+
+  // 현재 참가 중인 도시 정보 가져오기
+  const currentCity = authState.user?.city_id
+    ? citiesData.cities.find((city) => city.id === authState.user.city_id)
+    : null;
+  const currentCityName = currentCity
+    ? `${currentCity.province} ${currentCity.name}`
+    : "참가 중인 도시 없음";
 
   useEffect(() => {
     const loadInitialData = async () => {
@@ -66,18 +72,14 @@ export default function MyPageScreen() {
       if (imageUri) {
         setProfileImage(imageUri);
       } else {
-        // 로컬 더미 이미지 설정
-        setUser(prevUser => ({
-          ...prevUser,
-          profile: {
-            ...prevUser.profile,
-            imgUrl: require("../../assets/images/profiles/profile-gandalf.png"),
-          }
-        }));
+        // 로컬 더미 이미지 설정 (user.profile.imgUrl이 null일 경우)
+        if (!authState.user?.profile?.imgUrl) {
+          setProfileImage(require("../../assets/images/profiles/profile-gandalf.png"));
+        }
       }
     };
     loadInitialData();
-  }, []);
+  }, [authState.user?.profile?.imgUrl]); // authState.user.profile.imgUrl이 변경될 때만 실행
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -91,10 +93,6 @@ export default function MyPageScreen() {
       const imageUri = result.assets[0].uri;
       setProfileImage(imageUri);
       await AsyncStorage.setItem("profileImage", imageUri);
-      setUser(prevUser => ({
-        ...prevUser,
-        profile: { ...prevUser.profile, imgUrl: { uri: imageUri } }
-      }));
     }
   };
 
@@ -112,12 +110,14 @@ export default function MyPageScreen() {
       <View style={styles.profileSection}>
         <TouchableOpacity onPress={pickImage}>
           <Image 
-            source={profileImage ? { uri: profileImage } : user.profile.imgUrl}
+            source={profileImage ? { uri: profileImage } : (authState.user?.profile?.imgUrl || require("../../assets/images/profiles/profile-gandalf.png"))}
             style={styles.profileImage} 
           />
         </TouchableOpacity>
-        <Text style={styles.userName}>{user.profile.nickname}</Text>
-        <Text style={styles.userEmail}>{user.email}</Text>
+        <Text style={styles.userName}>{authState.user?.profile?.nickname || "게스트"}</Text>
+        <Text style={styles.userEmail}>{authState.user?.email || ""}</Text>
+        <Text style={styles.userReward}>보유 리워드: {authState.user?.point || 0} Almonds</Text>
+        <Text style={styles.currentCityText}>현재 참가 도시: {currentCityName}</Text>
       </View>
 
       <View style={styles.section}>
@@ -195,6 +195,16 @@ const styles = StyleSheet.create({
     color: colors.textSecondary,
     marginTop: 5,
   },
+  userReward: {
+    fontSize: 18,
+    color: colors.textSecondary,
+    marginTop: 5,
+  },
+  currentCityText: {
+    fontSize: 16,
+    color: colors.textSecondary,
+    marginTop: 5,
+  },
   section: {
     backgroundColor: colors.surface,
     borderRadius: 10,
@@ -266,7 +276,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.secondary,
     paddingVertical: 15,
     borderRadius: 10,
-    margin: 15, // 여백 줄임
+    margin: 10, // 여백 더 줄임
     alignItems: "center",
   },
   logoutButtonText: {

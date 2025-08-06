@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert, ScrollView } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Alert, ScrollView, TouchableOpacity } from 'react-native';
 import * as authApi from '../../api/auth';
 import colors from '../../styles/colors';
 
@@ -48,6 +48,7 @@ const SignUpScreen = ({ navigation }) => {
         <TextInput
           style={styles.input}
           placeholder="이메일"
+          placeholderTextColor={colors.textSecondary}
           value={email}
           onChangeText={setEmail}
           keyboardType="email-address"
@@ -56,6 +57,7 @@ const SignUpScreen = ({ navigation }) => {
         <TextInput
           style={styles.input}
           placeholder="비밀번호"
+          placeholderTextColor={colors.textSecondary}
           value={password}
           onChangeText={setPassword}
           secureTextEntry
@@ -63,6 +65,7 @@ const SignUpScreen = ({ navigation }) => {
         <TextInput
           style={styles.input}
           placeholder="비밀번호 확인"
+          placeholderTextColor={colors.textSecondary}
           value={password2}
           onChangeText={setPassword2}
           secureTextEntry
@@ -70,24 +73,28 @@ const SignUpScreen = ({ navigation }) => {
         <TextInput
           style={styles.input}
           placeholder="성 (Last Name)"
+          placeholderTextColor={colors.textSecondary}
           value={lastName}
           onChangeText={setLastName}
         />
         <TextInput
           style={styles.input}
           placeholder="이름 (First Name)"
+          placeholderTextColor={colors.textSecondary}
           value={firstName}
           onChangeText={setFirstName}
         />
         <TextInput
           style={styles.input}
           placeholder="국가"
+          placeholderTextColor={colors.textSecondary}
           value={country}
           onChangeText={setCountry}
         />
         <TextInput
           style={styles.input}
           placeholder="도시 코드 (City Code)"
+          placeholderTextColor={colors.textSecondary}
           value={cityCode}
           onChangeText={setCityCode}
           keyboardType="numeric"
@@ -95,16 +102,17 @@ const SignUpScreen = ({ navigation }) => {
         <TextInput
           style={styles.input}
           placeholder="도시 ID (City ID, 선택 사항)"
+          placeholderTextColor={colors.textSecondary}
           value={cityId}
           onChangeText={setCityId}
           keyboardType="numeric"
         />
-        <Button title="가입하기" onPress={handleSignUp} color={colors.primary} />
-        <Button
-          title="로그인 화면으로"
-          onPress={() => navigation.navigate('Login')}
-          color={colors.secondary}
-        />
+        <TouchableOpacity style={styles.button} onPress={handleSignUp}>
+          <Text style={styles.buttonText}>가입하기</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.button, styles.secondaryButton]} onPress={() => navigation.navigate('Login')}>
+          <Text style={styles.buttonText}>로그인 화면으로</Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );
@@ -114,7 +122,7 @@ const styles = StyleSheet.create({
   scrollContainer: {
     flexGrow: 1,
     justifyContent: 'center',
-    backgroundColor: colors.surface,
+    backgroundColor: colors.background, // 배경색 변경
   },
   container: {
     flex: 1,
@@ -129,12 +137,29 @@ const styles = StyleSheet.create({
     color: colors.textPrimary,
   },
   input: {
-    height: 40,
+    height: 50, // 높이 증가
     borderColor: colors.border,
     borderWidth: 1,
-    borderRadius: 5,
+    borderRadius: 8, // 둥근 모서리
     marginBottom: 15,
-    paddingHorizontal: 10,
+    paddingHorizontal: 15,
+    color: colors.textPrimary, // 텍스트 색상
+    backgroundColor: colors.surface, // 입력 필드 배경색
+  },
+  button: {
+    backgroundColor: colors.primary,
+    paddingVertical: 15,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  secondaryButton: {
+    backgroundColor: colors.secondary,
+  },
+  buttonText: {
+    color: colors.textOnPrimary,
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });
 

@@ -245,7 +245,7 @@ export const citiesData = {
       internetQuality: 76,
       workEnvironment: 60,
       activityLevel: 40, // 중간
-      tags: ["<20", "20s", "family", "nature_friendly"],
+      tags: ["<30", "family", "nature_friendly"],
       weatherIcon: "partly-cloudy",
       currentTemperature: 25,
       feelsLikeTemperature: 26,

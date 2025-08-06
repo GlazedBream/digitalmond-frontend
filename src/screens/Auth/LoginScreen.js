@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Alert, TouchableOpacity } from 'react-native';
 import { AuthContext } from '../../context/AuthContext';
 import colors from '../../styles/colors';
 
@@ -15,7 +15,6 @@ const LoginScreen = ({ navigation }) => {
     }
     try {
       await login(email, password);
-      // The navigation to the main app will be handled by the RootNavigator
     } catch (error) {
       Alert.alert('로그인 실패', '이메일 또는 비밀번호가 올바르지 않습니다.');
     }
@@ -27,6 +26,7 @@ const LoginScreen = ({ navigation }) => {
       <TextInput
         style={styles.input}
         placeholder="이메일"
+        placeholderTextColor={colors.textSecondary} // Placeholder 색상 추가
         value={email}
         onChangeText={setEmail}
         keyboardType="email-address"
@@ -35,16 +35,17 @@ const LoginScreen = ({ navigation }) => {
       <TextInput
         style={styles.input}
         placeholder="비밀번호"
+        placeholderTextColor={colors.textSecondary} // Placeholder 색상 추가
         value={password}
         onChangeText={setPassword}
         secureTextEntry
       />
-      <Button title="로그인" onPress={handleLogin} color={colors.primary} />
-      <Button
-        title="회원가입"
-        onPress={() => navigation.navigate('SignUp')}
-        color={colors.secondary}
-      />
+      <TouchableOpacity style={styles.button} onPress={handleLogin}>
+        <Text style={styles.buttonText}>로그인</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={[styles.button, styles.secondaryButton]} onPress={() => navigation.navigate('SignUp')}>
+        <Text style={styles.buttonText}>회원가입</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -54,7 +55,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     padding: 20,
-    backgroundColor: colors.surface,
+    backgroundColor: colors.background, // 배경색 변경
   },
   title: {
     fontSize: 24,
@@ -64,12 +65,29 @@ const styles = StyleSheet.create({
     color: colors.textPrimary,
   },
   input: {
-    height: 40,
+    height: 50, // 높이 증가
     borderColor: colors.border,
     borderWidth: 1,
-    borderRadius: 5,
+    borderRadius: 8, // 둥근 모서리
     marginBottom: 15,
-    paddingHorizontal: 10,
+    paddingHorizontal: 15,
+    color: colors.textPrimary, // 텍스트 색상
+    backgroundColor: colors.surface, // 입력 필드 배경색
+  },
+  button: {
+    backgroundColor: colors.primary,
+    paddingVertical: 15,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  secondaryButton: {
+    backgroundColor: colors.secondary,
+  },
+  buttonText: {
+    color: colors.textOnPrimary,
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });
 

@@ -1,6 +1,12 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
-import colors from '../styles/colors';
+import React from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  SafeAreaView,
+} from "react-native";
+import colors from "../styles/colors";
 
 const TopBar = ({ onBackPress, title, rightComponent }) => {
   return (
@@ -10,11 +16,9 @@ const TopBar = ({ onBackPress, title, rightComponent }) => {
           <Text style={styles.backButtonText}>←</Text>
         </TouchableOpacity>
         <View style={styles.titleContainer}>
-          <Text style={styles.titleText}>{title}</Text>
+          <Text style={styles.titleText}>{String(title)}</Text>
         </View>
-        <View style={styles.rightComponentContainer}>
-          {rightComponent}
-        </View>
+        <View style={styles.rightComponentContainer}>{rightComponent}</View>
       </View>
     </SafeAreaView>
   );
@@ -25,8 +29,8 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface,
   },
   container: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     height: 50,
     paddingHorizontal: 10,
     borderBottomWidth: 1,
@@ -34,8 +38,8 @@ const styles = StyleSheet.create({
   },
   backButton: {
     width: 60, // 고정 너비
-    justifyContent: 'center',
-    alignItems: 'flex-start', // 왼쪽 정렬
+    justifyContent: "center",
+    alignItems: "flex-start", // 왼쪽 정렬
     padding: 5,
   },
   backButtonText: {
@@ -44,17 +48,17 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: "center",
   },
   titleText: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: colors.textPrimary,
   },
   rightComponentContainer: {
     width: 60, // 고정 너비
-    justifyContent: 'center',
-    alignItems: 'flex-end', // 오른쪽 정렬
+    justifyContent: "center",
+    alignItems: "flex-end", // 오른쪽 정렬
   },
 });
 

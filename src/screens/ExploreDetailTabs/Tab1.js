@@ -32,26 +32,6 @@ const Tab1 = ({ cityData }) => {
         <Text style={styles.label}>설명:</Text>
         <Text style={styles.value}>{cityData?.description}</Text>
       </View>
-      <View style={styles.infoContainer}>
-        <Text style={styles.label}>Almond 인덱스:</Text>
-        <Text style={styles.value}>{cityData?.almondIndex}점</Text>
-      </View>
-      <View style={styles.infoContainer}>
-        <Text style={styles.label}>물가:</Text>
-        <Text style={styles.value}>{cityData?.costLevel}점</Text>
-      </View>
-      <View style={styles.infoContainer}>
-        <Text style={styles.label}>인터넷 품질:</Text>
-        <Text style={styles.value}>{cityData?.internetQuality}점</Text>
-      </View>
-      <View style={styles.infoContainer}>
-        <Text style={styles.label}>업무 환경:</Text>
-        <Text style={styles.value}>{cityData?.workEnvironment}점</Text>
-      </View>
-      <View style={styles.infoContainer}>
-        <Text style={styles.label}>활동성:</Text>
-        <Text style={styles.value}>{cityData?.activityLevel}점</Text>
-      </View>
     </View>
   );
 };
@@ -60,7 +40,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: colors.surface,
+    backgroundColor: colors.background,
   },
   title: {
     fontSize: 24,
@@ -86,7 +66,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 18,
     fontWeight: "bold",
-    width: 140,
+    width: 130,
     color: colors.textSecondary,
   },
   value: {

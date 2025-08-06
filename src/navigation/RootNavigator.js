@@ -9,6 +9,7 @@ import ConvenienceInfoScreen from '../screens/Living/ConvenienceInfoScreen';
 import EmergencyInfoScreen from '../screens/Living/EmergencyInfoScreen';
 import CommunityScreen from '../screens/Living/CommunityScreen';
 import ComingSoonScreen from '../screens/Living/ComingSoonScreen';
+import MissionDetailScreen from '../screens/MissionDetail';
 import { View, ActivityIndicator } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -58,6 +59,7 @@ const RootNavigator = () => {
             <Stack.Screen name="EmergencyInfo" component={EmergencyInfoScreen} />
             <Stack.Screen name="Community" component={CommunityScreen} />
             <Stack.Screen name="ComingSoon" component={ComingSoonScreen} />
+            <Stack.Screen name="MissionDetail" component={MissionDetailScreen} />
           </>
         ) : (
           <Stack.Screen name="Auth" component={AuthNavigator} />

@@ -2,6 +2,7 @@ import React, { createContext, useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as authApi from '../api/auth';
 import client from '../api/client';
+import { dummyUser } from '../data/users';
 
 const AuthContext = createContext();
 
@@ -10,7 +11,7 @@ const AuthProvider = ({ children }) => {
     token: null,
     isAuthenticated: false,
     isLoading: true,
-    user: null,
+    user: dummyUser.user, // 더미 유저 정보로 초기화
   });
 
   useEffect(() => {
@@ -19,13 +20,12 @@ const AuthProvider = ({ children }) => {
       const mockToken = process.env.MOCK_AUTH_TOKEN;
 
       if (mockToken) {
-        // If MOCK_AUTH_TOKEN is set, prioritize it for bypass
         client.defaults.headers.common['Authorization'] = `Bearer ${mockToken}`;
         setAuthState({
           token: mockToken,
           isAuthenticated: true,
           isLoading: false,
-          user: { id: 'mockUser', email: 'mock@example.com', firstName: 'Mock', lastName: 'User' }, // Dummy user for mock
+          user: { ...dummyUser.user, city_id: dummyUser.user.city_id }, // 더미 유저 정보 사용
         });
         console.log("Loaded MOCK_AUTH_TOKEN for initial bypass.");
       } else if (storedToken) {
@@ -39,7 +39,6 @@ const AuthProvider = ({ children }) => {
             user: user,
           });
         } catch (error) {
-          // If fetching user fails, clear token and treat as unauthenticated
           await AsyncStorage.removeItem('token');
           setAuthState({
             token: null,
@@ -79,8 +78,9 @@ const AuthProvider = ({ children }) => {
 
       let user = null;
       if (!mockToken) {
-        // Only fetch user data if not using mock bypass token
         user = await authApi.getMe();
+      } else {
+        user = { ...dummyUser.user, city_id: dummyUser.user.city_id }; // 더미 유저 정보 사용
       }
 
       setAuthState({
@@ -97,10 +97,9 @@ const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await authApi.logout(); // Call logout API
+      await authApi.logout();
     } catch (error) {
       console.error("Error calling logout API:", error);
-      // Continue with local logout even if API call fails
     }
     await AsyncStorage.removeItem('token');
     setAuthState({
@@ -112,8 +111,28 @@ const AuthProvider = ({ children }) => {
     delete client.defaults.headers.common['Authorization'];
   };
 
+  const updateUserPoint = async (amount) => {
+    setAuthState(prevState => {
+      const updatedUser = {
+        ...prevState.user,
+        point: (prevState.user.point || 0) + amount,
+      };
+      return { ...prevState, user: updatedUser };
+    });
+  };
+
+  const updateUserCityId = async (cityId) => {
+    setAuthState(prevState => {
+      const updatedUser = {
+        ...prevState.user,
+        city_id: cityId,
+      };
+      return { ...prevState, user: updatedUser };
+    });
+  };
+
   return (
-    <AuthContext.Provider value={{ authState, login, logout }}>
+    <AuthContext.Provider value={{ authState, login, logout, updateUserPoint, updateUserCityId }}>
       {children}
     </AuthContext.Provider>
   );

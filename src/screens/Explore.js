@@ -19,8 +19,7 @@ import { useFilter } from "../context/FilterContext";
 import { Ionicons } from "@expo/vector-icons";
 
 const ageGroupOptions = [
-  { label: "20대 미만", value: "<20" },
-  { label: "20대", value: "20s" },
+  { label: "20대 이하", value: "<30" },
   { label: "30대", value: "30s" },
   { label: "40대", value: "40s" },
   { label: "50대", value: "50s" },

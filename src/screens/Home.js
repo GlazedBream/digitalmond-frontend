@@ -18,6 +18,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const { width } = Dimensions.get("window");
 
 const bannerItems = [
+  "탐색에서 당신의 도시를 선택해주세요!",
   "영도구에 거주한 지 5일째",
   "관심있을만한 관광명소",
   "곧 열릴 축제",
@@ -159,6 +160,9 @@ const HomeScreen = () => {
             renderItem={renderTodo}
             keyExtractor={(item) => item.id}
             scrollEnabled={false} // To allow parent ScrollView to control scrolling
+            ListEmptyComponent={() => (
+              <Text style={styles.emptyListText}>아직 할 일이 없어요! 새로운 할 일을 추가해보세요.</Text>
+            )}
           />
         </View>
       </ScrollView>
@@ -268,6 +272,12 @@ const styles = StyleSheet.create({
   },
   todoButtons: {
     flexDirection: "row",
+  },
+  emptyListText: {
+    textAlign: "center",
+    marginTop: 20,
+    fontSize: 16,
+    color: colors.textSecondary,
   },
 });
 

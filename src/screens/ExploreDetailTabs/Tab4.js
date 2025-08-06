@@ -4,9 +4,9 @@ import colors from '../../styles/colors';
 
 const Tab4 = ({ cityData }) => (
   <View style={styles.container}>
-    <Text style={styles.title}>미션</Text>
-    <Text style={styles.content}>이곳은 {cityData?.name}에서 수행할 수 있는 미션 목록입니다.</Text>
-    <Text style={styles.content}>미션을 완료하고 Almond를 획득하세요!</Text>
+    <Text style={styles.title}>통계</Text>
+    <Text style={styles.content}>이곳은 {cityData?.name}에 대한 다양한 통계 데이터를 보여주는 탭입니다.</Text>
+    <Text style={styles.content}>인구, 경제, 환경 등 상세 정보를 확인할 수 있습니다.</Text>
   </View>
 );
 
@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: colors.surface,
+    backgroundColor: colors.background,
   },
   title: {
     fontSize: 24,
