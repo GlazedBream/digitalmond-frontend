@@ -5,7 +5,7 @@ import HomeScreen from '../screens/Home';
 import ExploreScreen from '../screens/Explore';
 import LivingScreen from '../screens/Living';
 import MissionScreen from '../screens/Mission';
-import MyPageScreen from '../screens/MyPage';
+import MyPageStackNavigator from './MyPageStackNavigator';
 
 const Tab = createBottomTabNavigator();
 
@@ -61,7 +61,7 @@ function TabNavigator() {
       />
       <Tab.Screen
         name="MyPage"
-        component={MyPageScreen}
+        component={MyPageStackNavigator}
         options={{
           tabBarLabel: '마이',
           tabBarIcon: ({ focused, color, size }) => (

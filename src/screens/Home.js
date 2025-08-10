@@ -18,6 +18,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const { width } = Dimensions.get("window");
 
 const bannerItems = [
+  "다음 여행지 고성을 추천합니다!\n고성을 확인해보세요!",
   "탐색에서 당신의 도시를 선택해주세요!",
   "영도구에 거주한 지 5일째",
   "관심있을만한 관광명소",
@@ -161,7 +162,9 @@ const HomeScreen = () => {
             keyExtractor={(item) => item.id}
             scrollEnabled={false} // To allow parent ScrollView to control scrolling
             ListEmptyComponent={() => (
-              <Text style={styles.emptyListText}>아직 할 일이 없어요! 새로운 할 일을 추가해보세요.</Text>
+              <Text style={styles.emptyListText}>
+                아직 할 일이 없어요! 새로운 할 일을 추가해보세요.
+              </Text>
             )}
           />
         </View>

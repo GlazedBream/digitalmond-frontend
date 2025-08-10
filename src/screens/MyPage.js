@@ -48,7 +48,7 @@ const initialRouteOptions = [
   { label: "미션", value: "Mission" },
 ];
 
-export default function MyPageScreen() {
+export default function MyPageScreen({ navigation }) {
   const { authState, logout } = useContext(AuthContext);
   const { ageGroup, companion, activityLevel, preference } = useFilter();
   const [profileImage, setProfileImage] = useState(null);
@@ -157,6 +157,25 @@ export default function MyPageScreen() {
             ))}
           </View>
         </View>
+      </View>
+
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>개발자 기능</Text>
+        <TouchableOpacity style={styles.devButton} onPress={() => navigation.navigate('DummyChatbot')}>
+          <Text style={styles.devButtonText}>더미 챗봇 화면</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.devButton} onPress={() => navigation.navigate('DummyCamera', { screenType: 'default' })}>
+          <Text style={styles.devButtonText}>카메라 촬영</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.devButton} onPress={() => navigation.navigate('DummyCamera', { screenType: 'gps_disabled' })}>
+          <Text style={styles.devButtonText}>카메라 - GPS 비활성화</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.devButton} onPress={() => navigation.navigate('DummyCamera', { screenType: 'auth_fail' })}>
+          <Text style={styles.devButtonText}>카메라 - 인증 실패</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.devButton} onPress={() => navigation.navigate('DummyCamera', { screenType: 'auth_success' })}>
+          <Text style={styles.devButtonText}>카메라 - 인증 성공</Text>
+        </TouchableOpacity>
       </View>
 
       <TouchableOpacity style={styles.logoutButton} onPress={logout}>
@@ -283,5 +302,17 @@ const styles = StyleSheet.create({
     color: colors.textOnPrimary,
     fontSize: 16,
     fontWeight: "bold",
+  },
+  devButton: {
+    backgroundColor: colors.primary,
+    paddingVertical: 12,
+    borderRadius: 8,
+    marginVertical: 5,
+    alignItems: 'center',
+  },
+  devButtonText: {
+    color: colors.textOnPrimary,
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
